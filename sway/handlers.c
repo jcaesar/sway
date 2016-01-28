@@ -9,6 +9,7 @@
 #include <ctype.h>
 
 #include "handlers.h"
+#include "render.h"
 #include "log.h"
 #include "layout.h"
 #include "config.h"
@@ -152,6 +153,10 @@ static void handle_output_pre_render(wlc_handle output) {
 
 static void handle_output_post_render(wlc_handle output) {
 	ipc_get_pixels(output);
+}
+
+static void handle_view_pre_render(wlc_handle view) {
+	render_view_borders(view);
 }
 
 static void handle_output_resolution_change(wlc_handle output, const struct wlc_size *from, const struct wlc_size *to) {
@@ -700,6 +705,9 @@ struct wlc_interface interface = {
 		.request = {
 			.geometry = handle_view_geometry_request,
 			.state = handle_view_state_request
+		},
+		.render = {
+			.pre = handle_view_pre_render
 		}
 	},
 	.keyboard = {
